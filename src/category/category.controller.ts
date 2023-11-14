@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -29,18 +39,21 @@ export class CategoryController {
   //Metodo para crear
   @ApiOperation({ summary: 'Create Categories' })
   @Post()
-  create(@Body() payload: CreateCategoryDto){
-    return payload;
+  async create(@Body() payload: CreateCategoryDto) {
+    const response = await this.categoriesService.create(payload);
+
+    return response;
   }
 
   //Metodo para actualizar
   @ApiOperation({ summary: 'Update Categories' })
   @Put(':id')
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateCategoryDto,
   ) {
-    return { id, body: payload };
+    const response = await this.categoriesService.update(id, payload);
+    return response;
   }
 
   //Metodo para actualizar parcialmente
@@ -56,7 +69,8 @@ export class CategoryController {
   //Metodo para eliminar
   @ApiOperation({ summary: 'Delete Categories' })
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number){
-    return `Registro eliminado ${id}`;
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    const response = await this.categoriesService.delete(id);
+    return response;
   }
 }
