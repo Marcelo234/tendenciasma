@@ -59,11 +59,12 @@ export class CategoryController {
   //Metodo para actualizar parcialmente
   @ApiOperation({ summary: 'Change Categories State' })
   @Patch(':id')
-  changeState(
+  async changeState(
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: ChangeStateCategoryDto,
   ) {
-    return { id, body: payload };
+    const response = await this.categoriesService.patch(id, payload);
+    return response;
   }
 
   //Metodo para eliminar

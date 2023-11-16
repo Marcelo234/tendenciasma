@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -7,6 +12,7 @@ import { StudentModule } from './student/student.module';
 import { CategoryModule } from './category/category.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryEntity } from './category/category.entity';
+import { VerifyUserMiddleware } from './midelddwares/verifiy-user-midelddware';
 
 @Module({
   imports: [
@@ -28,4 +34,10 @@ import { CategoryEntity } from './category/category.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(VerifyUserMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.POST });
+  }
+}
